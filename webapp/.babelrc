@@ -1,0 +1,37 @@
+{
+  "presets": [
+    [
+      "latest",
+      {
+        "es2015": {
+          "modules": false
+        }
+      }
+    ],
+    "stage-0"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        [
+          "babel-plugin-styled-components",
+          {
+            "minify": false
+          }
+        ]
+      ]
+    },
+    "production": {
+      "only": [
+        "app"
+      ]
+    },
+    "test": {
+      "plugins": [
+        "transform-es2015-modules-commonjs",
+        "transform-es2015-modules-commonjs",
+        "dynamic-import-node"
+      ]
+    }
+  }
+}

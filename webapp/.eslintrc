@@ -1,0 +1,39 @@
+{
+  "extends": "apptension",
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true,
+    "es6": true
+  },
+  "plugins": [
+    "chai-friendly"
+  ],
+  "rules": {
+    "new-cap": [
+      2,
+      {
+        "capIsNewExceptions": [
+          "List",
+          "Map",
+          "Record",
+          "OrderedMap",
+          "OrderedSet"
+        ]
+      }
+    ],
+    "no-unused-expressions": 0,
+    // https://github.com/eslint/eslint/issues/2102
+    "chai-friendly/no-unused-expressions": 1
+  },
+  "settings": {
+    "import/core-modules": [
+      "local-env-config",
+      "env-config",
+      "report-error",
+      "json-server",
+      "nock",
+      "inquirer-directory"
+    ]
+  }
+}

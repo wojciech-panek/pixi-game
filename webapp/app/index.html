@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- The first thing in any HTML file should be the charset -->
+    <meta charset="utf-8">
+    <!-- Make the page mobile compatible -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Apptension React Boilerplate</title>
+
+    <style>
+      html, body, #app {
+        width: 100%;
+        height: 100%;
+      }
+
+      #app {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The app hooks into this div -->
+    <div id="app"></div>
+    <!-- Open Sans Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+    <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically includes all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this HTML file. Don't add any assets here! (Check out the webpack config files in internals/webpack for details) -->
+  </body>
+</html>
