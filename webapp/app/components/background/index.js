@@ -1,17 +1,20 @@
 import { Container, extras } from 'pixi.js';
-import { Loader } from '../loader';
+
+import { Loader } from '../../utils/loader';
+import { EventEmitter } from '../../utils/eventEmitter';
 
 
 export class Background {
-  constructor({ width, height }) {
-    this.width = width;
-    this.height = height;
+  constructor({ parentStage }) {
+    this.parentStage = parentStage;
 
     this.stage = new Container();
     this.sprite = null;
 
     this.createStage();
+
     this.handleResize();
+    EventEmitter.on('resize', this.handleResize)
   }
 
   createStage() {
@@ -20,14 +23,8 @@ export class Background {
     this.stage.addChild(this.sprite);
   }
 
-  handleResize() {
-    this.sprite.width = this.width;
-    this.sprite.height = this.height;
-  }
-
-  resize({ width, height }) {
-    this.width = width;
-    this.height = height;
-    this.handleResize();
-  }
+  handleResize = () => {
+    this.sprite.width = this.parentStage.width;
+    this.sprite.height = this.parentStage.height;
+  };
 }

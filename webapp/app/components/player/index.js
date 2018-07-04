@@ -1,12 +1,11 @@
 import { Container, Graphics, Sprite } from 'pixi.js';
 
+import { EventEmitter } from '../../utils/eventEmitter';
+
 
 export class Player {
-  constructor({ width, height, texture, scaleX, scaleY }) {
-    this.width = width;
-    this.height = height;
-    this.scaleX = scaleX;
-    this.scaleY = scaleY;
+  constructor({ parentStage, texture }) {
+    this.parentStage = parentStage;
     this.texture = texture;
 
     this.stage = new Container();
@@ -15,7 +14,9 @@ export class Player {
     this.border = null;
 
     this.createStage();
+
     this.handleResize();
+    EventEmitter.on('resize', this.handleResize);
   }
 
   createStage() {
@@ -23,14 +24,13 @@ export class Player {
     this.mask = new Graphics();
     this.border = new Graphics();
 
-    this.stage.addChild(this.sprite);
-    this.stage.addChild(this.mask);
-    this.stage.addChild(this.border);
+    this.stage.addChild(this.sprite, this.mask, this.border);
   }
 
-  handleResize() {
-    this.sprite.width = this.height / 60;
-    this.sprite.height = this.height / 60;
+  handleResize = () => {
+    const { height: parentHeight, width: parentWidth, scale: { x: parentScaleX, y: parentScaleY } } = this.parentStage;
+    this.sprite.width = parentHeight / 60;
+    this.sprite.height = parentHeight / 60;
 
     this.mask.clear();
     this.mask.beginFill(0x000000);
@@ -43,20 +43,12 @@ export class Player {
     this.border.lineStyle(1, 0x000000);
     this.border.drawCircle(this.sprite.width / 2, this.sprite.height / 2, this.sprite.width / 2);
 
-    this.stage.position.x = (this.width / 2 / this.scaleX) - this.stage.width / 2;
-    this.stage.position.y = (this.height / 2 / this.scaleY) - this.stage.height / 2;
-  }
+    this.stage.position.x = (parentWidth / 2 / parentScaleX) - this.stage.width / 2;
+    this.stage.position.y = (parentHeight / 2 / parentScaleY) - this.stage.height / 2;
+  };
 
-  resize({ width, height, scaleX, scaleY }) {
-    this.width = width;
-    this.height = height;
-    this.scaleX = scaleX;
-    this.scaleY = scaleY;
-    this.handleResize();
-  }
-
-  loop() {
+  loop = () => {
     this.stage.position.x += (Math.random() > 0.5 ? 1 : -1) * Math.random();
     this.stage.position.y += (Math.random() > 0.5 ? 1 : -1) * Math.random();
-  }
+  };
 }

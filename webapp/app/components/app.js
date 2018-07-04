@@ -2,6 +2,7 @@ import { Application } from 'pixi.js';
 
 import { Field } from './field';
 import { Background } from './background';
+import { EventEmitter } from '../utils/eventEmitter';
 
 
 export class App {
@@ -9,11 +10,11 @@ export class App {
     this.app = null;
     this.field = null;
 
-    this.crateApp();
+    this.crate();
     this.addListeners();
   }
 
-  crateApp() {
+  crate() {
     this.app = new Application({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -22,13 +23,12 @@ export class App {
       resolution: 1,
     });
 
-    this.background = new Background({ width: this.app.renderer.width, height: this.app.renderer.height });
-    this.field = new Field({ width: this.app.renderer.width, height: this.app.renderer.height });
+    this.background = new Background({ parentStage: this.app.renderer });
+    this.field = new Field({ parentStage: this.app.renderer });
 
-    this.app.stage.addChild(this.background.stage);
-    this.app.stage.addChild(this.field.stage);
+    this.app.stage.addChild(this.background.stage, this.field.stage);
 
-    this.app.ticker.add((delta) => this.field.loop(delta));
+    this.app.ticker.add(this.field.loop);
   }
 
   addListeners() {
@@ -37,8 +37,7 @@ export class App {
 
   handleResize = () => {
     this.app.renderer.resize(window.innerWidth, window.innerHeight);
-    this.field.resize({ width: this.app.renderer.width, height: this.app.renderer.height });
-    this.background.resize({ width: this.app.renderer.width, height: this.app.renderer.height });
+    EventEmitter.emit('resize');
   };
 
   render(elementId) {

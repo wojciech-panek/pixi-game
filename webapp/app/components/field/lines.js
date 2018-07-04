@@ -1,19 +1,22 @@
 import { Container, Graphics } from 'pixi.js';
 
+import { EventEmitter } from '../../utils/eventEmitter';
+
 
 const FIELD_MARGIN_X = 200;
 const FIELD_MARGIN_Y = 50;
 
 export class Lines {
-  constructor({ width, height }) {
-    this.width = width;
-    this.height = height;
+  constructor({ parentStage }) {
+    this.parentStage = parentStage;
 
     this.stage = new Container();
     this.graph = null;
 
     this.createStage();
+
     this.handleResize();
+    EventEmitter.on('resize', this.handleResize)
   }
 
   createStage() {
@@ -55,22 +58,13 @@ export class Lines {
     this.graph.endFill();
   }
 
-  handleResize() {
-    const widthScale = (this.width - FIELD_MARGIN_X) / this.stage.width * this.stage.scale.x;
-    const heightScale = (this.height - FIELD_MARGIN_Y) / this.stage.height * this.stage.scale.y;
+  handleResize = () => {
+    const { width: parentWidth, height: parentHeight } = this.parentStage;
+    const widthScale = (parentWidth - FIELD_MARGIN_X) / this.stage.width * this.stage.scale.x;
+    const heightScale = (parentHeight - FIELD_MARGIN_Y) / this.stage.height * this.stage.scale.y;
 
-    const scale = Math.min(widthScale, heightScale);
+    this.stage.scale.set(Math.min(widthScale, heightScale), Math.min(widthScale, heightScale));
 
-    this.stage.scale.x = scale;
-    this.stage.scale.y = scale;
-
-    this.stage.x = this.width / 2 - this.stage.width / 2;
-    this.stage.y = this.height / 2 - this.stage.height / 2;
-  }
-
-  resize({ width, height }) {
-    this.width = width;
-    this.height = height;
-    this.handleResize();
-  }
+    this.stage.position.set(parentWidth / 2 - this.stage.width / 2, parentHeight / 2 - this.stage.height / 2);
+  };
 }

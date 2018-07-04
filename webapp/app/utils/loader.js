@@ -1,10 +1,10 @@
 import { loader } from 'pixi.js';
 
 
-import groundImage from '../../images/ground.png';
-import goalImage from '../../images/goal.png';
-import flagPlImage from '../../images/flags/pl.png';
-import flagSnImage from '../../images/flags/sn.png';
+import groundImage from '../images/ground.png';
+import goalImage from '../images/goal.png';
+import flagPlImage from '../images/flags/pl.png';
+import flagSnImage from '../images/flags/sn.png';
 
 class LoaderClass {
   resources = {};
