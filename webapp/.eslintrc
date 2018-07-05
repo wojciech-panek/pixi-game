@@ -23,6 +23,7 @@
       }
     ],
     "no-unused-expressions": 0,
+    "no-invalid-this": 0,
     // https://github.com/eslint/eslint/issues/2102
     "chai-friendly/no-unused-expressions": 1
   },
