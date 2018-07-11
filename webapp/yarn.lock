@@ -7232,6 +7232,12 @@ p-try@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-1.0.0.tgz#cbc79cdbaf8fd4228e13f621f2b1a237c1b207b3"
 
+p2@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/p2/-/p2-0.7.1.tgz#25f2474d9bc3a6d3140a1da26a67c9e118ac9543"
+  dependencies:
+    poly-decomp "0.1.1"
+
 package-json@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/package-json/-/package-json-4.0.1.tgz#8869a0401253661c4c4ca3da6c2121ed555f5eed"
@@ -7577,6 +7583,10 @@ pngquant-bin@^3.0.0:
     bin-build "^2.0.0"
     bin-wrapper "^3.0.0"
     logalot "^2.0.0"
+
+poly-decomp@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/poly-decomp/-/poly-decomp-0.1.1.tgz#9f68c4fa558663791c9ba4c2df7283f3096c23c9"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"

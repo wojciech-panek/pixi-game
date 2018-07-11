@@ -39,10 +39,10 @@ export class Goals {
 
     this.spriteLeft.position.x = offsetX - borderWidth - this.spriteLeft.height / 2;
     this.spriteLeft.position.y = offsetY + parentHeight / 2;
-    this.spriteLeft.rotation = -90 * Math.PI / 180;
+    this.spriteLeft.rotation = -Math.PI / 2;
 
     this.spriteRight.position.x = offsetX + parentWidth - borderWidth + this.spriteRight.height / 2;
     this.spriteRight.position.y = offsetY + parentHeight / 2;
-    this.spriteRight.rotation = 90 * Math.PI / 180;
+    this.spriteRight.rotation = Math.PI / 2;
   };
 }

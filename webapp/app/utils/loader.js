@@ -5,6 +5,7 @@ import groundImage from '../images/ground.png';
 import goalImage from '../images/goal.png';
 import flagPlImage from '../images/flags/pl.png';
 import flagSnImage from '../images/flags/sn.png';
+import ballImage from '../images/favicon.png';
 
 class LoaderClass {
   resources = {};
@@ -14,6 +15,7 @@ class LoaderClass {
     { name: 'goal', path: goalImage },
     { name: 'flagPl', path: flagPlImage },
     { name: 'flagSn', path: flagSnImage },
+    { name: 'ball', path: ballImage },
   ];
 
   load() {

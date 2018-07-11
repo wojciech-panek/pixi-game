@@ -3,6 +3,11 @@ import { Container, Graphics } from 'pixi.js';
 import { EventEmitter } from '../../utils/eventEmitter';
 
 
+export const FIELD_RELATIVE_WIDTH = 315;
+export const FIELD_RELATIVE_HEIGHT = 210;
+export const BOX_RELATIVE_WIDTH = 49.5;
+export const BOX_RELATIVE_HEIGHT = 120;
+
 const FIELD_MARGIN_X = 200;
 const FIELD_MARGIN_Y = 50;
 
@@ -28,33 +33,34 @@ export class Lines {
 
     this.graph
       .moveTo(0, 0)
-      .lineTo(315, 0)
-      .lineTo(315, 210)
-      .lineTo(0, 210)
+      .lineTo(FIELD_RELATIVE_WIDTH, 0)
+      .lineTo(FIELD_RELATIVE_WIDTH, FIELD_RELATIVE_HEIGHT)
+      .lineTo(0, FIELD_RELATIVE_HEIGHT)
       .lineTo(0, 0);
 
     this.graph
-      .moveTo(157.5, 0)
-      .lineTo(157.5, 210);
-
-    this.graph.drawCircle(157.5, 105, 27);
+      .moveTo(FIELD_RELATIVE_WIDTH / 2, 0)
+      .lineTo(FIELD_RELATIVE_WIDTH / 2, FIELD_RELATIVE_HEIGHT);
 
     this.graph
-      .moveTo(0, 45)
-      .lineTo(49.5, 45)
-      .lineTo(49.5, 165)
-      .lineTo(0, 165);
+      .drawCircle(FIELD_RELATIVE_WIDTH / 2, FIELD_RELATIVE_HEIGHT / 2, 27);
 
     this.graph
-      .moveTo(315, 45)
-      .lineTo(265.5, 45)
-      .lineTo(265.5, 165)
-      .lineTo(315, 165);
+      .moveTo(0, (FIELD_RELATIVE_HEIGHT - BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(BOX_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT - BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(BOX_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT + BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(0, (FIELD_RELATIVE_HEIGHT + BOX_RELATIVE_HEIGHT) / 2);
+
+    this.graph
+      .moveTo(FIELD_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT - BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(FIELD_RELATIVE_WIDTH - BOX_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT - BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(FIELD_RELATIVE_WIDTH - BOX_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT + BOX_RELATIVE_HEIGHT) / 2)
+      .lineTo(FIELD_RELATIVE_WIDTH, (FIELD_RELATIVE_HEIGHT + BOX_RELATIVE_HEIGHT) / 2);
 
     this.graph.beginFill(0xffffff);
-    this.graph.drawCircle(157.5, 105, 1);
-    this.graph.drawCircle(33, 105, 1);
-    this.graph.drawCircle(282, 105, 1);
+    this.graph.drawCircle(FIELD_RELATIVE_WIDTH / 2, FIELD_RELATIVE_HEIGHT / 2, 1);
+    this.graph.drawCircle(33, FIELD_RELATIVE_HEIGHT / 2, 1);
+    this.graph.drawCircle(282, FIELD_RELATIVE_HEIGHT / 2, 1);
     this.graph.endFill();
   }
 
