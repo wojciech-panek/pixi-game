@@ -28,10 +28,20 @@ export class App {
     this.field = new Field({ parentStage: this.app.renderer });
 
     this.physics = new Physics(this.field);
+    this.physics.onGoal = (which) => {
+      window.alert(`Shot on ${which} goal. Reset in 3000ms`); // eslint-disable-line
+      setTimeout(this.reset, 3000);
+    };
 
     this.app.stage.addChild(this.background.stage, this.field.stage);
 
     this.app.ticker.add(this.field.loop);
+    this.app.ticker.add(this.physics.loop);
+  }
+
+  reset = () => {
+    this.app.ticker.remove(this.physics.loop);
+    this.physics = new Physics(this.field);
     this.app.ticker.add(this.physics.loop);
   }
 

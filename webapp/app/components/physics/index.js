@@ -1,4 +1,4 @@
-import { World, Body, Circle, Plane, Box } from 'p2';
+import { World, Body, Circle, Plane, Box, Material, ContactMaterial } from 'p2';
 import { Vector } from 'vector2d';
 
 import {
@@ -7,13 +7,44 @@ import {
 } from '../field/lines';
 
 const FORCE_MULTIPLIER = 2000;
+const LEFT_GOAL_ID = 1000;
+const RIGHT_GOAL_ID = 1001;
+const BALL_ID = 1002;
+
 
 export default class Physics {
   constructor(field) {
     this.world = new World({ gravity: [0, 0] });
+    this.world.on('beginContact', ({ bodyA, bodyB }) => {
+      const ids = [bodyA.id, bodyB.id];
+
+      if (ids.includes(BALL_ID)) {
+        if (ids.includes(LEFT_GOAL_ID)) {
+          this.onGoal('left');
+        } else if (ids.includes(RIGHT_GOAL_ID)) {
+          this.onGoal('right');
+        }
+      }
+    });
+
     this.field = field;
+    this.onGoal = () => {};
 
     this.setupBoundaries();
+
+    this.playerMaterial = new Material();
+    this.ballMaterial = new Material();
+    this.boundaryMaterial = new Material();
+
+    this.world.addContactMaterial(new ContactMaterial(this.playerMaterial, this.ballMaterial, {
+      friction: 1,
+      restitution: 0,
+    }));
+
+    this.world.addContactMaterial(new ContactMaterial(this.boundaryMaterial, this.ballMaterial, {
+      friction: 0.95,
+      restitution: 1,
+    }));
 
     this.objects = {
       playerOne: this.addPlayer([FIELD_RELATIVE_WIDTH / 2 - 10, FIELD_RELATIVE_HEIGHT / 2]),
@@ -35,16 +66,16 @@ export default class Physics {
       damping: 0.9,
     });
 
-    player.addShape(new Circle({ radius: 4 }));
+    player.addShape(new Circle({ radius: 4, material: this.playerMaterial }));
     this.world.addBody(player);
 
     return player;
   }
 
   addBall(position) {
-    const ball = new Body({ mass: 1, position, damping: 0.5 });
+    const ball = new Body({ id: BALL_ID, mass: 1, position, damping: 0.3 });
 
-    ball.addShape(new Circle({ radius: 3 }));
+    ball.addShape(new Circle({ radius: 3, material: this.ballMaterial }));
     this.world.addBody(ball);
 
     return ball;
@@ -59,7 +90,7 @@ export default class Physics {
     ];
 
     planeBoundaries.forEach(boundary => {
-      boundary.addShape(new Plane());
+      boundary.addShape(new Plane({ material: this.boundaryMaterial }));
       this.world.addBody(boundary);
     });
 
@@ -71,7 +102,27 @@ export default class Physics {
     ];
 
     boxBoundaries.forEach(boundary => {
-      boundary.addShape(new Box({ width: 15, height: 80 }));
+      boundary.addShape(new Box({ width: 15, height: 80, material: this.boundaryMaterial }));
+      this.world.addBody(boundary);
+    });
+
+    const boxGoalBoundaries = [
+      new Body({
+        id: LEFT_GOAL_ID,
+        collisionResponse: false,
+        position: [-10.5, 157.5],
+        type: Body.KINEMATIC,
+      }),
+      new Body({
+        id: RIGHT_GOAL_ID,
+        collisionResponse: false,
+        position: [FIELD_RELATIVE_WIDTH + 10.5, 157.5],
+        type: Body.KINEMATIC,
+      }),
+    ];
+
+    boxGoalBoundaries.forEach(boundary => {
+      boundary.addShape(new Box({ width: 12, height: 155, material: this.boundaryMaterial }));
       this.world.addBody(boundary);
     });
   }
@@ -97,7 +148,7 @@ export default class Physics {
         if (playerPosition.distance(ballPosition) < 10) {
           const direction = ballPosition.subtract(playerPosition).normalise();
 
-          this.objects.ball.applyImpulse(direction.mulS(40).toArray());
+          this.objects.ball.applyImpulse(direction.mulS(60).toArray());
         }
       }
     });
