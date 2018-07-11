@@ -44,16 +44,19 @@ export class App {
   handleKeyUp = ({ key }) => {
     switch (key) {
       case 'ArrowUp':
-        this.physics.players.playerOne.data.direction.y = 0;
+        this.physics.objects.playerOne.data.direction.y = 0;
         break;
       case 'ArrowDown':
-        this.physics.players.playerOne.data.direction.y = 0;
+        this.physics.objects.playerOne.data.direction.y = 0;
         break;
       case 'ArrowLeft':
-        this.physics.players.playerOne.data.direction.x = 0;
+        this.physics.objects.playerOne.data.direction.x = 0;
         break;
       case 'ArrowRight':
-        this.physics.players.playerOne.data.direction.x = 0;
+        this.physics.objects.playerOne.data.direction.x = 0;
+        break;
+      case ' ':
+        this.physics.objects.playerOne.data.shot = true;
         break;
     }
   };
@@ -61,16 +64,16 @@ export class App {
   handleKeyDown = ({ key }) => {
     switch (key) {
       case 'ArrowUp':
-        this.physics.players.playerOne.data.direction.y = -1;
+        this.physics.objects.playerOne.data.direction.y = -1;
         break;
       case 'ArrowDown':
-        this.physics.players.playerOne.data.direction.y = 1;
+        this.physics.objects.playerOne.data.direction.y = 1;
         break;
       case 'ArrowLeft':
-        this.physics.players.playerOne.data.direction.x = -1;
+        this.physics.objects.playerOne.data.direction.x = -1;
         break;
       case 'ArrowRight':
-        this.physics.players.playerOne.data.direction.x = 1;
+        this.physics.objects.playerOne.data.direction.x = 1;
         break;
     }
   };

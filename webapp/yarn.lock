@@ -9880,6 +9880,10 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
 
+vector2d@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/vector2d/-/vector2d-3.0.0.tgz#4376fd2f5f271b2be5aeeed8355003c6365dfdcf"
+
 vendors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/vendors/-/vendors-1.0.1.tgz#37ad73c8ee417fb3d580e785312307d274847f22"

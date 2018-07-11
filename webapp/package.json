@@ -80,7 +80,8 @@
     "prop-types": "^15.6.1",
     "ramda": "^0.25.0",
     "semver-compare": "^1.0.0",
-    "ua-parser-js": "^0.7.18"
+    "ua-parser-js": "^0.7.18",
+    "vector2d": "^3.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",

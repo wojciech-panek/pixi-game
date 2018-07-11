@@ -1,11 +1,12 @@
 import { World, Body, Circle, Plane, Box } from 'p2';
+import { Vector } from 'vector2d';
 
 import {
   FIELD_RELATIVE_WIDTH,
   FIELD_RELATIVE_HEIGHT,
 } from '../field/lines';
 
-const FORCE_MULTIPLIER = 3000;
+const FORCE_MULTIPLIER = 2000;
 
 export default class Physics {
   constructor(field) {
@@ -13,15 +14,15 @@ export default class Physics {
     this.field = field;
 
     this.setupBoundaries();
-    this.setupBall();
 
-    this.players = {
+    this.objects = {
       playerOne: this.addPlayer([FIELD_RELATIVE_WIDTH / 2 - 10, FIELD_RELATIVE_HEIGHT / 2]),
       playerTwo: this.addPlayer([FIELD_RELATIVE_WIDTH / 2 + 10, FIELD_RELATIVE_HEIGHT / 2]),
+      ball: this.addBall([FIELD_RELATIVE_WIDTH / 2, FIELD_RELATIVE_HEIGHT / 2]),
     };
 
     ['playerOne', 'playerTwo'].forEach(key => {
-      this.players[key].data = {
+      this.objects[key].data = {
         direction: { x: 0, y: 0 },
       };
     });
@@ -40,10 +41,13 @@ export default class Physics {
     return player;
   }
 
-  setupBall() {
-    this.ball = new Body({ mass: 5, position: [0, 0] });
-    this.ball.addShape(new Circle({ radius: 3 }));
-    this.world.addBody(this.ball);
+  addBall(position) {
+    const ball = new Body({ mass: 1, position, damping: 0.5 });
+
+    ball.addShape(new Circle({ radius: 3 }));
+    this.world.addBody(ball);
+
+    return ball;
   }
 
   setupBoundaries() {
@@ -74,26 +78,42 @@ export default class Physics {
 
   applyForces() {
     ['playerOne', 'playerTwo'].forEach(key => {
-      const player = this.players[key];
+      const player = this.objects[key];
 
       player.applyForce([player.data.direction.x * FORCE_MULTIPLIER, player.data.direction.y * FORCE_MULTIPLIER]);
     });
   }
 
-  movePlayer(index, direction) {
-    this[index].applyForce(direction);
+  checkShots() {
+    ['playerOne', 'playerTwo'].forEach(key => {
+      const player = this.objects[key];
+
+      if (player.data.shot) {
+        player.data.shot = false;
+
+        const playerPosition = new Vector(...player.position);
+        const ballPosition = new Vector(...this.objects.ball.position);
+
+        if (playerPosition.distance(ballPosition) < 10) {
+          const direction = ballPosition.subtract(playerPosition).normalise();
+
+          this.objects.ball.applyImpulse(direction.mulS(40).toArray());
+        }
+      }
+    });
   }
 
   loop = (delta) => {
     this.world.step(1 / 60, delta, 10);
     this.applyForces();
     this.bindPositions();
+    this.checkShots();
   };
 
   bindPositions() {
-    ['playerOne', 'playerTwo'].forEach((key) => {
-      this.field[key].stage.position.x = this.players[key].position[0];
-      this.field[key].stage.position.y = this.players[key].position[1];
+    ['playerOne', 'playerTwo', 'ball'].forEach((key) => {
+      this.field[key].stage.position.x = this.objects[key].position[0];
+      this.field[key].stage.position.y = this.objects[key].position[1];
     });
   }
 }
