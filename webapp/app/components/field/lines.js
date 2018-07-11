@@ -65,7 +65,7 @@ export class Lines {
   }
 
   handleResize = () => {
-    const { width: parentWidth, height: parentHeight } = this.parentStage;
+    const { screen: { width: parentWidth, height: parentHeight } } = this.parentStage;
     const widthScale = (parentWidth - FIELD_MARGIN_X) / this.stage.width * this.stage.scale.x;
     const heightScale = (parentHeight - FIELD_MARGIN_Y) / this.stage.height * this.stage.scale.y;
 
