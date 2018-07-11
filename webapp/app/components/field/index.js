@@ -3,6 +3,7 @@ import { Container } from 'pixi.js';
 import { Lines } from './lines';
 import { Goals } from './goals';
 import { Player } from '../player';
+import { Ball } from './ball';
 import { Loader } from '../../utils/loader';
 
 
@@ -20,6 +21,13 @@ export class Field {
     this.createLines();
     this.createGoals();
     this.createPlayers();
+    this.createBall();
+  }
+
+  createBall() {
+    this.ball = new Ball({ parentStage: this.parentStage });
+
+    this.lines.stage.addChild(this.ball.stage);
   }
 
   createLines() {
