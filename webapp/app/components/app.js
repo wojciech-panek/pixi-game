@@ -7,12 +7,14 @@ import { EventEmitter } from '../utils/eventEmitter';
 import Physics from './physics';
 
 export class App {
-  constructor() {
+  constructor({ elementId }) {
+    this.element = document.querySelector(elementId);
     this.app = null;
     this.field = null;
 
     this.create();
     this.addListeners();
+    this.render();
   }
 
   create() {
@@ -25,15 +27,10 @@ export class App {
       autoResize: true,
     });
 
-    this.gameState = new GameState({ parentStage: this.app.renderer });
+    this.gameState = new GameState({ parentStage: this.app.renderer, reset: this.reset });
     this.background = new Background({ parentStage: this.app.renderer });
     this.field = new Field({ parentStage: this.app.renderer });
-
     this.physics = new Physics(this.field);
-    this.physics.onGoal = (which) => {
-      window.alert(`Shot on ${which} goal. Reset in 3000ms`); // eslint-disable-line
-      setTimeout(this.reset, 3000);
-    };
 
     this.app.stage.addChild(this.background.stage, this.field.stage, this.gameState.stage);
 
@@ -41,8 +38,10 @@ export class App {
     this.app.ticker.add(this.physics.loop);
 
     //TODO Players connection
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
+    EventEmitter.on('GAME_STARTED', this.reset);
+  }
 
   reset = () => {
     this.app.ticker.remove(this.physics.loop);
@@ -69,6 +68,9 @@ export class App {
         break;
       case 'ArrowRight':
         this.physics.objects.playerOne.data.direction.x = 0;
+        break;
+      case 'r':
+        EventEmitter.emit('GAME_STOPPED');
         break;
       case ' ':
         this.physics.objects.playerOne.data.shot = true;
@@ -98,7 +100,5 @@ export class App {
     EventEmitter.emit('resize');
   };
 
-  render(elementId) {
-    document.querySelector(elementId).appendChild(this.app.view);
-  }
+  render = () => this.element.appendChild(this.app.view);
 }

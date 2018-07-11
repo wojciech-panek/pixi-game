@@ -1,5 +1,6 @@
 import { World, Body, Circle, Plane, Box, Material, ContactMaterial } from 'p2';
 import { Vector } from 'vector2d';
+import { EventEmitter } from '../../utils/eventEmitter';
 
 import {
   FIELD_RELATIVE_WIDTH,
@@ -20,15 +21,14 @@ export default class Physics {
 
       if (ids.includes(BALL_ID)) {
         if (ids.includes(LEFT_GOAL_ID)) {
-          this.onGoal('left');
+          EventEmitter.emit('GOAL', { type: 'left' });
         } else if (ids.includes(RIGHT_GOAL_ID)) {
-          this.onGoal('right');
+          EventEmitter.emit('GOAL', { type: 'right' });
         }
       }
     });
 
     this.field = field;
-    this.onGoal = () => {};
 
     this.setupBoundaries();
 

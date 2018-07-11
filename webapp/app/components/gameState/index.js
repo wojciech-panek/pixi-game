@@ -3,7 +3,8 @@ import machina from 'machina';
 import { value, tween } from 'popmotion';
 import { EventEmitter } from '../../utils/eventEmitter';
 import { WaitingIndicator } from './waitingIndicator';
-import { StartButton } from './startButton'
+import { StartButton } from './startButton';
+import { Goal } from './goal';
 
 export const WAITING_STATE = 'waiting';
 export const READY_STATE = 'ready';
@@ -22,7 +23,8 @@ const GAME_STARTED_EVENT = 'GAME_STARTED';
 const GAME_STOPPED_EVENT = 'GAME_STOPPED';
 
 export class GameState {
-  constructor({ parentStage }) {
+  constructor({ parentStage, reset }) {
+    this.reset = reset;
     this.parentStage = parentStage;
     this._players = {
       [LEFT_PLAYER]: {
@@ -35,12 +37,13 @@ export class GameState {
       },
     };
 
+    this.goal = new Goal({ parentStage: this.parentStage, reset: this.reset });
     this.stage = new Container();
     this.blend = new Graphics();
     this.startButton = new StartButton({ parentStage: this.parentStage, onClick: this.handleStartClick });
     this.waitingIndicator = new WaitingIndicator({ parentStage: this.parentStage });
 
-    this.stage.addChild(this.blend, this.waitingIndicator.stage, this.startButton.stage);
+    this.stage.addChild(this.blend, this.waitingIndicator.stage, this.startButton.stage, this.goal.stage);
 
     this.drawBlend();
     this.blendAlpha = value(0, this.handleBlendAlpha);
@@ -62,7 +65,16 @@ export class GameState {
 
     EventEmitter.on(PLAYER_CONNECTED_EVENT, this.handlePlayerConnected);
     EventEmitter.on(PLAYER_DISCONNECTED_EVENT, this.handlePlayerDisconnected);
+    EventEmitter.on(GOAL_EVENT, this.handleGoal);
+    EventEmitter.on(GAME_STOPPED_EVENT, this.handleGameStopped);
   }
+
+  handleGoal = ({ type }) => {
+    this.goal.show();
+    this.incrementPoints(type);
+  }
+
+  handleGameStopped = () => this.changeGameState(READY_STATE);
 
   handleStartClick = () => this.changeGameState(IN_PROGRESS_STATE);
 
@@ -75,7 +87,6 @@ export class GameState {
     }, 1800);
 
     setTimeout(() => {
-      this.stage.visible = false;
       EventEmitter.emit(GAME_STARTED_EVENT);
     }, 2500);
   }
@@ -83,7 +94,6 @@ export class GameState {
   handlePlayerDisconnected = (data) => {
     this._players[data.type].connected = false;
     this.waitingIndicator.playerDisconnected(data);
-    EventEmitter.emit(GAME_STOPPED_EVENT);
     this.changeGameState(WAITING_STATE);
   }
 
@@ -110,15 +120,17 @@ export class GameState {
     .endFill();
 
   handleWaitingStateEnter = () => {
-    this.stage.visible = true;
     this.fadeInBlend();
     this.waitingIndicator.fadeIn();
   }
 
   handleReadyStateEnter = () => {
-    this.stage.visible = true;
+    this.fadeInBlend();
     this.waitingIndicator.fadeIn(false);
     this.startButton.animateIn();
+
+    this._players[LEFT_PLAYER].points = 0;
+    this._players[RIGHT_PLAYER].points = 0;
   }
 
   incrementPoints = player => (this._players[player].points++);
