@@ -2,9 +2,9 @@ import { Application } from 'pixi.js';
 
 import { Field } from './field';
 import { Background } from './background';
+import { GameState } from './gameState';
 import { EventEmitter } from '../utils/eventEmitter';
 import Physics from './physics';
-
 
 export class App {
   constructor() {
@@ -21,9 +21,11 @@ export class App {
       height: window.innerHeight,
       antialias: true,
       transparent: false,
-      resolution: 1,
+      resolution: window.devicePixelRatio,
+      autoResize: true,
     });
 
+    this.gameState = new GameState({ parentStage: this.app.renderer });
     this.background = new Background({ parentStage: this.app.renderer });
     this.field = new Field({ parentStage: this.app.renderer });
 
@@ -33,11 +35,14 @@ export class App {
       setTimeout(this.reset, 3000);
     };
 
-    this.app.stage.addChild(this.background.stage, this.field.stage);
+    this.app.stage.addChild(this.background.stage, this.field.stage, this.gameState.stage);
 
     this.app.ticker.add(this.field.loop);
     this.app.ticker.add(this.physics.loop);
-  }
+
+    //TODO Players connection
+    EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
+    EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
 
   reset = () => {
     this.app.ticker.remove(this.physics.loop);
