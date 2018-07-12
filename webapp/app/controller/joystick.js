@@ -1,12 +1,14 @@
 import { Graphics, Rectangle } from 'pixi.js';
 import { transform, spring, listen, pointer, value } from 'popmotion';
+import { throttle } from 'lodash';
 
 import { BUTTONS_COLOR, ACTIVE_BUTTONS_COLOR } from './app';
 import { updateGraphicProps } from './helpers';
 
 class Joystick extends Graphics {
-  constructor({ deviceHeight, accessibleArea, position }) {
+  constructor({ onMove, deviceHeight, accessibleArea, position }) {
     super();
+    this.onMove = onMove;
     this.joystickSize = deviceHeight / 10;
     this.joystickPosition = position;
     this.joystickAccessibleArea = accessibleArea;
@@ -38,6 +40,13 @@ class Joystick extends Graphics {
       x: to.x,
       y: to.y,
     });
+
+    throttle(() => {
+      this.onMove({
+        x: to.x,
+        y: to.y,
+      });
+    }, 30);
   }
 
   handleTouchStart = () => {

@@ -6,6 +6,8 @@ import { GameState } from './gameState';
 import { EventEmitter } from '../utils/eventEmitter';
 import Physics from './physics';
 
+export const PLAYER_CONNECTED = 'PLAYER_CONNECTED';
+
 export class App {
   constructor({ elementId }) {
     this.element = document.querySelector(elementId);

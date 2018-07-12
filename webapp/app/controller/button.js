@@ -4,8 +4,9 @@ import { BUTTONS_COLOR, ACTIVE_BUTTONS_COLOR } from './app';
 import { updateGraphicProps } from './helpers';
 
 class Button extends Graphics {
-  constructor({ buttonSize, position }) {
+  constructor({ onKick, buttonSize, position }) {
     super();
+    this.onKick = onKick;
     this.buttonMode = true;
     this.interactive = true;
     this.hitArea = new Rectangle(0, 0, buttonSize, buttonSize);
@@ -30,8 +31,7 @@ class Button extends Graphics {
 
   handleClick = (e) => {
     e.stopPropagation();
-    // this.onClick();
-    // emit info about kick
+    this.onKick();
   }
 
   handleTouchStart = () => {
