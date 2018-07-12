@@ -1,5 +1,5 @@
 import { Graphics, Rectangle } from 'pixi.js';
-import { transform, spring, listen, pointer, value } from 'popmotion';
+import { transform, spring, interpolate, pointer, value } from 'popmotion';
 import { throttle } from 'lodash';
 
 import { updateGraphicProps } from './helpers';
@@ -43,10 +43,13 @@ class Joystick extends Graphics {
       y: to.y,
     });
 
+    const moveInterpolate = transform
+      .interpolate([- this.joystickAccessibleArea / 2, this.joystickAccessibleArea / 2], [-1, 1]);
+
     throttle(() => {
       this.onMove({
-        x: to.x,
-        y: to.y,
+        x: moveInterpolate(to.x - this.joystickPosition.x),
+        y: moveInterpolate(to.y - this.joystickPosition.y),
       });
     }, 30);
   }
@@ -59,7 +62,7 @@ class Joystick extends Graphics {
   }
 
   handleTouchEnd = ({ targetTouches }) => {
-    if (targetTouches.length > 0) {
+    if (targetTouches && targetTouches.length > 0) {
       return;
     }
 
