@@ -47,21 +47,12 @@ class Joystick extends Graphics {
       .interpolate([- this.joystickAccessibleArea / 2, this.joystickAccessibleArea / 2], [-1, 1]);
 
     this.emitPosition({
-      x: to.x - this.joystickPosition.x,
-      y: to.y - this.joystickPosition.y,
+      x: moveInterpolate(to.x - this.joystickPosition.x),
+      y: moveInterpolate(to.y - this.joystickPosition.y),
     });
-
-    // throttle(() => {
-    //   console.log('trottle', to.x - this.joystickPosition.x)
-    //   this.onMove({
-    //     x: moveInterpolate(to.x - this.joystickPosition.x),
-    //     y: moveInterpolate(to.y - this.joystickPosition.y),
-    //   });
-    // }, 30)();
   }
 
   emitPosition = throttle((position) => {
-    console.log('trottle', position)
     this.onMove(position);
   }, 30);
 

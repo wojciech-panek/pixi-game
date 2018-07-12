@@ -152,6 +152,7 @@ export class ControllerApp {
   }
 
   onKick = () => {
+    console.log('kick 2')
     this.socket.emit('KICK');
   }
 

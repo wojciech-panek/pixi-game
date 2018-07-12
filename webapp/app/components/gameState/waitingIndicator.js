@@ -16,7 +16,7 @@ export class WaitingIndicator {
     this.rightPlayerLine = new Graphics();
 
     this.text = new Text('WAITING FOR PLAYERS', {
-      fontFamily: 'Open sans',
+      fontFamily: 'Open Sans',
       fontSize: 12,
       fontWeight: 600,
       fill: Colors.primary,

@@ -8,7 +8,7 @@ const ACTIVE_BUTTONS_COLOR = '0xd73638';
 class Button extends Graphics {
   constructor({ onKick, buttonSize, position }) {
     super();
-    this.onKick = onKick;
+    this.onKick = onKick.bind(this);
     this.buttonMode = true;
     this.interactive = true;
     this.hitArea = new Rectangle(0, 0, buttonSize, buttonSize);
@@ -33,10 +33,11 @@ class Button extends Graphics {
 
   handleClick = (e) => {
     e.stopPropagation();
-    this.onKick();
   }
 
   handleTouchStart = () => {
+    console.log('kick')
+    this.onKick();
     updateGraphicProps(this, {
       'fillColor': ACTIVE_BUTTONS_COLOR,
     });

@@ -65,13 +65,17 @@ export class App {
     this.socket.on('playerDisconnected', data => EventEmitter.emit('PLAYER_DISCONNECTED', data));
     // this.socket.on('playerDisconnected', this.handleMove);
     this.socket.on('MOVE', this.handleMove);
-    this.socket.on('KICK', this.handleDisconnect);
+    this.socket.on('KICK', this.handleKick);
   }
 
   handleMove = ({ x, y }) => {
     // console.log('handleMove')
     this.physics.objects.playerOne.data.direction.x = x;
     this.physics.objects.playerOne.data.direction.y = y;
+  }
+
+  handleKick = () => {
+    this.physics.objects.playerOne.data.shot = true;
   }
 
   handleKeyUp = ({ key }) => {
