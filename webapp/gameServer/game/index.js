@@ -1,16 +1,16 @@
-import { BLUE_PLAYER, RED_PLAYER, GAME, isPlayerType, getTypeById } from '../helpers';
+const helpers = require('../helpers');
+const { BLUE_PLAYER, RED_PLAYER, GAME, isPlayerType, getTypeById } = helpers;
 
-export default class Game {
+class Game {
   constructor(socket) {
     console.log('Game created.');
     this.socket = socket;
     this.socket.on('connection', this.handleClientConnection);
-  }
-
-  clients = {
-    [GAME]: null,
-    [BLUE_PLAYER]: null,
-    [RED_PLAYER]: null,
+    this.clients = {
+      [GAME]: null,
+      [BLUE_PLAYER]: null,
+      [RED_PLAYER]: null,
+    }
   }
 
   handleClientConnection = (socket) => {
@@ -19,7 +19,7 @@ export default class Game {
 
     socket.on('disconnect', this.handleClientDisconnection(id));
     socket.on('gameConnected', this.handleGameClientConnection(socket));
-    socket.on('playerConnected', this.handlePlayerConnection(socket));
+    socket.on('PLAYER_CONNECTED', this.handlePlayerConnection(socket));
     socket.on('move', this.handleMove(id));
     socket.on('kick', this.handleKick(id));
   }
@@ -63,7 +63,7 @@ export default class Game {
 
     socket.join(type);
     this.clients[type] = id;
-    this.socket.to(GAME).emit('playerConnected', { type });
+    this.socket.to(GAME).emit('PLAYER_CONNECTED', { type });
   }
 
   handlePlayerDisconnection = (type) => {
@@ -73,3 +73,5 @@ export default class Game {
     this.socket.to(GAME).emit('playerDisconnected', { type });
   }
 }
+
+module.exports = Game;

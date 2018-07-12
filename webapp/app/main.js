@@ -2,7 +2,6 @@ import 'babel-polyfill';
 import 'normalize.css/normalize.css';
 
 import { App } from './components/app';
-import { Server } from './server/server';
 import { ControllerApp } from './controller/app';
 import { Loader } from './utils/loader';
 

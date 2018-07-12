@@ -1,4 +1,5 @@
 import { Application } from 'pixi.js';
+import socketio from 'socket.io-client';
 
 import { Field } from './field';
 import { Background } from './background';
@@ -16,6 +17,7 @@ export class App {
 
     this.create();
     this.addListeners();
+    this.addSocket();
     this.render();
   }
 
@@ -53,8 +55,19 @@ export class App {
 
   addListeners() {
     window.addEventListener('resize', this.handleResize);
-    window.addEventListener('keyup', this.handleKeyUp);
-    window.addEventListener('keydown', this.handleKeyDown);
+    // window.addEventListener('keyup', this.handleKeyUp);
+    // window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  addSocket = () => {
+    this.socket = socketio(`${window.location.hostname}:8181`);
+    this.socket.on('move', this.handleMove);
+    this.socket.on('kick', this.handleDisconnect);
+  }
+
+  handleMove = ({ x, y }) => {
+    this.physics.objects.playerOne.data.direction.x = y;
+    this.physics.objects.playerOne.data.direction.x = y;
   }
 
   handleKeyUp = ({ key }) => {
