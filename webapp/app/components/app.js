@@ -41,9 +41,9 @@ export class App {
     this.app.ticker.add(this.field.loop);
     this.app.ticker.add(this.physics.loop);
 
-    //TODO Players connection
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
+    // //TODO Players connection
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
     EventEmitter.on('GAME_STARTED', this.reset);
   }
 

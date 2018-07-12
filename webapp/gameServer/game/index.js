@@ -24,7 +24,7 @@ class Game {
     socket.on('kick', this.handleKick(id));
   }
 
-  handleKick = (id) => {
+  handleKick = (id) => () => {
     const type = getTypeById(id, this.clients);
     this.socket.to(GAME).emit('kick', { type });
   }
