@@ -1,5 +1,6 @@
 import { Application, Text, Graphics } from 'pixi.js';
 import socketio from 'socket.io-client';
+import qs from 'querystring';
 
 import { EventEmitter } from '../utils/eventEmitter';
 import Joystick from './joystick';
@@ -21,6 +22,7 @@ export class ControllerApp {
     this.deviceWidth = window.innerWidth;
     this.deviceHeight = window.innerHeight;
     this.status = null;
+    this.socket = socketio(`${window.location.hostname}:8181`);
 
     this.crate();
     this.addListeners();
@@ -134,7 +136,6 @@ export class ControllerApp {
   }
 
   addSocket = () => {
-    this.socket = socketio(`${window.location.hostname}:8181`);
     this.socket.on('connect', this.handleConnect);
     this.socket.on('disconnect', this.handleDisconnect);
   }
@@ -143,15 +144,15 @@ export class ControllerApp {
 
   handleConnect = () => {
     this.status = CONNECTED;
-    this.socket.emit('PLAYER_CONNECTED', { type: 'left' });
+    this.socket.emit('playerConnected', { type: qs.parse(location.search)['?type'] });
   }
 
   onMove = ({ x, y }) => {
-    this.socket.emit('move', { x, y });
+    this.socket.emit('MOVE', { x, y });
   }
 
   onKick = () => {
-    this.socket.emit('kick');
+    this.socket.emit('KICK');
   }
 
   render(elementId) {

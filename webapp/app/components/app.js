@@ -14,6 +14,7 @@ export class App {
     this.element = document.querySelector(elementId);
     this.app = null;
     this.field = null;
+    this.socket = socketio(`${window.location.hostname}:8181`);
 
     this.create();
     this.addListeners();
@@ -60,14 +61,17 @@ export class App {
   }
 
   addSocket = () => {
-    this.socket = socketio(`${window.location.hostname}:8181`);
-    this.socket.on('move', this.handleMove);
-    this.socket.on('kick', this.handleDisconnect);
+    this.socket.on('playerConnected', data => EventEmitter.emit('PLAYER_CONNECTED', data));
+    this.socket.on('playerDisconnected', data => EventEmitter.emit('PLAYER_DISCONNECTED', data));
+    // this.socket.on('playerDisconnected', this.handleMove);
+    this.socket.on('MOVE', this.handleMove);
+    this.socket.on('KICK', this.handleDisconnect);
   }
 
   handleMove = ({ x, y }) => {
-    this.physics.objects.playerOne.data.direction.x = y;
-    this.physics.objects.playerOne.data.direction.x = y;
+    // console.log('handleMove')
+    this.physics.objects.playerOne.data.direction.x = x;
+    this.physics.objects.playerOne.data.direction.y = y;
   }
 
   handleKeyUp = ({ key }) => {

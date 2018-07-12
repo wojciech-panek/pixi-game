@@ -19,19 +19,20 @@ class Game {
 
     socket.on('disconnect', this.handleClientDisconnection(id));
     socket.on('gameConnected', this.handleGameClientConnection(socket));
-    socket.on('PLAYER_CONNECTED', this.handlePlayerConnection(socket));
-    socket.on('move', this.handleMove(id));
-    socket.on('kick', this.handleKick(id));
+    socket.on('playerConnected', this.handlePlayerConnection(socket));
+    socket.on('MOVE', this.handleMove(id));
+    socket.on('KICK', this.handleKick(id));
   }
 
   handleKick = (id) => () => {
     const type = getTypeById(id, this.clients);
-    this.socket.to(GAME).emit('kick', { type });
+    this.socket.emit('KICK', { type });
   }
 
-  handleMove = (id) => ({ position }) => {
+  handleMove = (id) => ({ x, y }) => {
     const type = getTypeById(id, this.clients);
-    this.socket.to(GAME).emit('move', { position, type });
+    console.log('MOVE', x, y, type)
+    this.socket.emit('MOVE', { x, y, type });
   }
 
   handleClientDisconnection = (id) => () => {
@@ -63,14 +64,14 @@ class Game {
 
     socket.join(type);
     this.clients[type] = id;
-    this.socket.to(GAME).emit('PLAYER_CONNECTED', { type });
+    this.socket.emit('playerConnected', { type });
   }
 
   handlePlayerDisconnection = (type) => {
     console.log(`Player '${type}' disconnected.`);
 
     this.clients[type] = null;
-    this.socket.to(GAME).emit('playerDisconnected', { type });
+    this.socket.emit('playerDisconnected', { type });
   }
 }
 

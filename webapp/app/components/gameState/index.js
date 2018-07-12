@@ -125,6 +125,7 @@ export class GameState {
   handleWaitingStateEnter = () => {
     this.fadeInBlend();
     this.waitingIndicator.fadeIn();
+    this.startButton.animateOut();
   }
 
   handleReadyStateEnter = () => {

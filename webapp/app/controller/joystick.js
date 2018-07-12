@@ -10,7 +10,7 @@ const ACTIVE_BUTTONS_COLOR = '0xd73638';
 class Joystick extends Graphics {
   constructor({ onMove, deviceHeight, accessibleArea, position }) {
     super();
-    this.onMove = onMove;
+    this.onMove = onMove.bind(this);
     this.joystickSize = deviceHeight / 10;
     this.joystickPosition = position;
     this.joystickAccessibleArea = accessibleArea;
@@ -46,13 +46,24 @@ class Joystick extends Graphics {
     const moveInterpolate = transform
       .interpolate([- this.joystickAccessibleArea / 2, this.joystickAccessibleArea / 2], [-1, 1]);
 
-    throttle(() => {
-      this.onMove({
-        x: moveInterpolate(to.x - this.joystickPosition.x),
-        y: moveInterpolate(to.y - this.joystickPosition.y),
-      });
-    }, 30);
+    this.emitPosition({
+      x: to.x - this.joystickPosition.x,
+      y: to.y - this.joystickPosition.y,
+    });
+
+    // throttle(() => {
+    //   console.log('trottle', to.x - this.joystickPosition.x)
+    //   this.onMove({
+    //     x: moveInterpolate(to.x - this.joystickPosition.x),
+    //     y: moveInterpolate(to.y - this.joystickPosition.y),
+    //   });
+    // }, 30)();
   }
+
+  emitPosition = throttle((position) => {
+    console.log('trottle', position)
+    this.onMove(position);
+  }, 30);
 
   handleTouchStart = () => {
     pointer(this.moveXY.get()).start(this.moveXY);
