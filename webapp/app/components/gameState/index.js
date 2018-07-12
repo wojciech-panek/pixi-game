@@ -5,6 +5,7 @@ import { EventEmitter } from '../../utils/eventEmitter';
 import { WaitingIndicator } from './waitingIndicator';
 import { StartButton } from './startButton';
 import { Goal } from './goal';
+import { Points } from './points';
 
 export const WAITING_STATE = 'waiting';
 export const READY_STATE = 'ready';
@@ -37,13 +38,14 @@ export class GameState {
       },
     };
 
+    this.points = new Points({ parentStage: this.parentStage });
     this.goal = new Goal({ parentStage: this.parentStage, reset: this.reset });
     this.stage = new Container();
     this.blend = new Graphics();
     this.startButton = new StartButton({ parentStage: this.parentStage, onClick: this.handleStartClick });
     this.waitingIndicator = new WaitingIndicator({ parentStage: this.parentStage });
 
-    this.stage.addChild(this.blend, this.waitingIndicator.stage, this.startButton.stage, this.goal.stage);
+    this.stage.addChild(this.blend, this.points.stage, this.waitingIndicator.stage, this.startButton.stage, this.goal.stage);
 
     this.drawBlend();
     this.blendAlpha = value(0, this.handleBlendAlpha);
@@ -72,6 +74,7 @@ export class GameState {
   handleGoal = ({ type }) => {
     this.goal.show();
     this.incrementPoints(type);
+    this.points.updatePoint({ type, points: this._players[type].points });
   }
 
   handleGameStopped = () => this.changeGameState(READY_STATE);
@@ -125,6 +128,7 @@ export class GameState {
   }
 
   handleReadyStateEnter = () => {
+    this.points.reset();
     this.fadeInBlend();
     this.waitingIndicator.fadeIn(false);
     this.startButton.animateIn();

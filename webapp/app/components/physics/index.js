@@ -21,9 +21,9 @@ export default class Physics {
 
       if (ids.includes(BALL_ID)) {
         if (ids.includes(LEFT_GOAL_ID)) {
-          EventEmitter.emit('GOAL', { type: 'left' });
-        } else if (ids.includes(RIGHT_GOAL_ID)) {
           EventEmitter.emit('GOAL', { type: 'right' });
+        } else if (ids.includes(RIGHT_GOAL_ID)) {
+          EventEmitter.emit('GOAL', { type: 'left' });
         }
       }
     });
