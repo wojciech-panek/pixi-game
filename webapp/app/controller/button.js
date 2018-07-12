@@ -1,7 +1,9 @@
 import { Graphics, Rectangle } from 'pixi.js';
 
-import { BUTTONS_COLOR, ACTIVE_BUTTONS_COLOR } from './app';
 import { updateGraphicProps } from './helpers';
+
+const BUTTONS_COLOR = '0xff6265';
+const ACTIVE_BUTTONS_COLOR = '0xd73638';
 
 class Button extends Graphics {
   constructor({ onKick, buttonSize, position }) {

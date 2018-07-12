@@ -2,8 +2,10 @@ import { Graphics, Rectangle } from 'pixi.js';
 import { transform, spring, listen, pointer, value } from 'popmotion';
 import { throttle } from 'lodash';
 
-import { BUTTONS_COLOR, ACTIVE_BUTTONS_COLOR } from './app';
 import { updateGraphicProps } from './helpers';
+
+const BUTTONS_COLOR = '0xff6265';
+const ACTIVE_BUTTONS_COLOR = '0xd73638';
 
 class Joystick extends Graphics {
   constructor({ onMove, deviceHeight, accessibleArea, position }) {

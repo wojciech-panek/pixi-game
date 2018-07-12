@@ -4,7 +4,6 @@ import socketio from 'socket.io-client';
 import { EventEmitter } from '../utils/eventEmitter';
 import Joystick from './joystick';
 import Button from './button';
-import { PLAYER_CONNECTED } from '../components/app';
 
 const MAIN_COLOR = '0xe3e9f5';
 const SECONDARY_COLOR = '0x505161';
@@ -144,7 +143,7 @@ export class ControllerApp {
 
   handleConnect = () => {
     this.status = CONNECTED;
-    this.socket.emit(PLAYER_CONNECTED, { type: 'left' });
+    this.socket.emit('PLAYER_CONNECTED', { type: 'left' });
   }
 
   onMove = ({ x, y }) => {
