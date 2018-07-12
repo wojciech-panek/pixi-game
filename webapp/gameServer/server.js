@@ -6,7 +6,7 @@ import path from 'path';
 import Game from './game';
 
 
-export class Server {
+class Server {
   constructor({ elementId }) {
     this.elementId = elementId;
     this.app = express();
@@ -28,3 +28,6 @@ export class Server {
     app.get('*', (req, res) => res.sendfile(path.join(__dirname, '../dist/index.html')));
   }
 }
+
+// eslint-disable-next-line no-new
+new Server();

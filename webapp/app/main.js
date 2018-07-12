@@ -14,7 +14,5 @@ if (pathname.includes('controller')) {
   Loader.load().then(() => {
     // eslint-disable-next-line no-new
     new App({ elementId: '#app' });
-    // eslint-disable-next-line no-new
-    new Server();
   });
 }

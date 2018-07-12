@@ -13,7 +13,7 @@
   "author": "Apptension",
   "license": "MIT",
   "scripts": {
-    "server": "babel-watch ./app/server/server",
+    "server": "babel-watch ./app/gameServer/server",
     "precommit": "lint-staged",
     "analyze:clean": "rimraf stats.json",
     "preanalyze": "npm run analyze:clean",
