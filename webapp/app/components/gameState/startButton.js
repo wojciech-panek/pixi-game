@@ -16,6 +16,7 @@ export class StartButton {
     };
 
     this.text = new Text('START', {
+      fontFamily: 'Open Sans',
       fontSize: 14,
       fill: Colors.white,
       fontWeight: 900,

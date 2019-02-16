@@ -1,4 +1,5 @@
 import { Application } from 'pixi.js';
+import socketio from 'socket.io-client';
 
 import { Field } from './field';
 import { Background } from './background';
@@ -6,14 +7,18 @@ import { GameState } from './gameState';
 import { EventEmitter } from '../utils/eventEmitter';
 import Physics from './physics';
 
+export const PLAYER_CONNECTED = 'PLAYER_CONNECTED';
+
 export class App {
   constructor({ elementId }) {
     this.element = document.querySelector(elementId);
     this.app = null;
     this.field = null;
+    this.socket = socketio(`${window.location.hostname}:8181`);
 
     this.create();
     this.addListeners();
+    this.addSocket();
     this.render();
   }
 
@@ -37,9 +42,9 @@ export class App {
     this.app.ticker.add(this.field.loop);
     this.app.ticker.add(this.physics.loop);
 
-    //TODO Players connection
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
-    EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
+    // //TODO Players connection
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'left' });
+    // EventEmitter.emit('PLAYER_CONNECTED', { type: 'right' });
     EventEmitter.on('GAME_STARTED', this.reset);
   }
 
@@ -51,8 +56,26 @@ export class App {
 
   addListeners() {
     window.addEventListener('resize', this.handleResize);
-    window.addEventListener('keyup', this.handleKeyUp);
-    window.addEventListener('keydown', this.handleKeyDown);
+    // window.addEventListener('keyup', this.handleKeyUp);
+    // window.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  addSocket = () => {
+    this.socket.on('playerConnected', data => EventEmitter.emit('PLAYER_CONNECTED', data));
+    this.socket.on('playerDisconnected', data => EventEmitter.emit('PLAYER_DISCONNECTED', data));
+    // this.socket.on('playerDisconnected', this.handleMove);
+    this.socket.on('MOVE', this.handleMove);
+    this.socket.on('KICK', this.handleKick);
+  }
+
+  handleMove = ({ x, y }) => {
+    // console.log('handleMove')
+    this.physics.objects.playerOne.data.direction.x = x;
+    this.physics.objects.playerOne.data.direction.y = y;
+  }
+
+  handleKick = () => {
+    this.physics.objects.playerOne.data.shot = true;
   }
 
   handleKeyUp = ({ key }) => {

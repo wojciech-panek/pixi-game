@@ -1,0 +1,54 @@
+import { Graphics, Rectangle } from 'pixi.js';
+
+import { updateGraphicProps } from './helpers';
+
+const BUTTONS_COLOR = '0xff6265';
+const ACTIVE_BUTTONS_COLOR = '0xd73638';
+
+class Button extends Graphics {
+  constructor({ onKick, buttonSize, position }) {
+    super();
+    this.onKick = onKick.bind(this);
+    this.buttonMode = true;
+    this.interactive = true;
+    this.hitArea = new Rectangle(0, 0, buttonSize, buttonSize);
+    this.addListeners();
+
+    this.beginFill(BUTTONS_COLOR);
+    this.drawRoundedRect(0, 0, buttonSize, buttonSize, 20);
+    this.endFill();
+    this.position.set(position.x, position.y);
+    this.pivot.set(buttonSize / 2, buttonSize / 2);
+    this.rotation = Math.PI * 2 * 0.125;
+  }
+
+  addListeners = () => {
+    this.on('tap', this.handleClick);
+    this.on('click', this.handleClick);
+    this.on('mousedown', this.handleTouchStart);
+    this.on('touchstart', this.handleTouchStart);
+    this.on('mouseup', this.handleTouchEnd);
+    this.on('touchend', this.handleTouchEnd);
+  }
+
+  handleClick = (e) => {
+    e.stopPropagation();
+  }
+
+  handleTouchStart = () => {
+    console.log('kick')
+    this.onKick();
+    updateGraphicProps(this, {
+      'fillColor': ACTIVE_BUTTONS_COLOR,
+    });
+  }
+
+  handleTouchEnd = (e) => {
+    e.stopPropagation();
+    updateGraphicProps(this, {
+      'fillColor': BUTTONS_COLOR,
+    });
+  }
+}
+
+export default Button;
